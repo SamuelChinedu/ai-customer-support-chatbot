@@ -24,14 +24,19 @@ st.title("🤖 AI Customer Support Chatbot")
 st.markdown("**Ask me anything about Update-24 Tech Services — I'm powered by advanced AI!**")
 
 #Get API key securely from Streamlit secrets (no input needed)
+# Get API key securely from Streamlit secrets (deployed) or input (local testing)
 try:
     api_key = st.secrets["GROQ_API_KEY"]
 except KeyError:
-    # Fallback for local testing — remove or comment in production
+    # Fallback for local testing
     api_key = st.text_input("Groq API Key (local testing only)", type="password")
     if not api_key:
         st.info("Enter your Groq API key to test locally (get free at https://console.groq.com/keys)")
         st.stop()
+
+# Now safely initialize the client (only runs if api_key exists)
+client = Groq(api_key=api_key)
+
 # System prompt — guides the AI to act as your support agent
 system_prompt = """
 You are a friendly, professional customer support agent for Update-24 Tech Services.
@@ -81,4 +86,5 @@ st.markdown("""
     <div class="footer">
         <strong>Built by Update-24 Tech Services</strong> — Intelligent AI-Powered Solutions
     </div>
+
 """, unsafe_allow_html=True)
